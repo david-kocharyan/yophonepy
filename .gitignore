@@ -1,0 +1,73 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE specific files
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# If you are using PyCharm #
+.idea
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.xml
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/gradle.xml
+.idea/**/libraries
+*.iws /out/
+
+# C extensions (DLLs, Pyd files)
+*.so
+*.pyd
+
+# Package distribution
+dist/
+build/
+sdist/
+*.egg-info/
+
+# Installer logs
+*.install.log
+pip-log.txt
+pip-delete-this.txt
+
+# Unit test / coverage reports
+.tox/
+coverage/
+.coverage
+nosetests.xml
+pytest_cache/
+
+# Environment-specific files
+.env
+.venv/
+env/
+venv/
+envs/
+*/__pycache__
+
+# Jupyter Notebook related (if applicable)
+.ipynb_checkpoints/
+
+# OS or Editor specific files
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+*.swo
+
+# Python Packaging - editable installs
+yophone.egg-info/
+
+# MyPy cache
+.mypy_cache/
