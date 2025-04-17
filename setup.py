@@ -15,6 +15,7 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/david-kocharyan/yophonepy',
     license='MIT',
+    license_files=['LICENSE'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
