@@ -50,7 +50,10 @@ class YoPhonePy:
             logging.error(f"Request to {endpoint} failed: {err}")
             return None
 
-    def message_handler(self, func: Callable[[Dict[str, Any]], None]):
+    def message_handler(
+            self,
+            func: Callable[[Dict[str, Any]], None]
+    ):
         """
         Registers a generic handler for incoming messages.
         """
@@ -98,7 +101,10 @@ class YoPhonePy:
             except Exception as ex:
                 logging.exception(f"Failed to process update: {ex}")
 
-    def start_polling(self, interval: int = 3):
+    def start_polling(
+            self,
+            interval: int = 3
+    ):
         """
         Continuously polls for updates at a specified interval.
 
@@ -114,7 +120,11 @@ class YoPhonePy:
             logging.exception(f"Polling loop encountered an error: {e}")
             time.sleep(5)
 
-    def send_message(self, chat_id: str, text: str) -> Optional[Dict[str, Any]]:
+    def send_message(
+            self,
+            chat_id: str,
+            text: str
+    ) -> Optional[Dict[str, Any]]:
         return self._make_request("POST", "sendMessage", data={"to": chat_id, "text": text})
 
     def send_message_with_options(
@@ -183,13 +193,19 @@ class YoPhonePy:
         payload = {"to": chat_id, "text": text, "mediaURLs": media_urls}
         return self._make_request("POST", "sendMessage", data=payload)
 
-    def configure_commands(self, commands: List[Dict[str, str]]) -> Optional[Dict[str, Any]]:
+    def configure_commands(
+            self,
+            commands: List[Dict[str, str]]
+    ) -> Optional[Dict[str, Any]]:
         response = self._make_request("POST", "setCommands", data={"commands": commands})
         if response:
             logging.info("Commands configured successfully.")
         return response
 
-    def set_webhook(self, webhook_url: str) -> Optional[Dict[str, Any]]:
+    def set_webhook(
+            self,
+            webhook_url: str
+    ) -> Optional[Dict[str, Any]]:
         response = self._make_request("POST", "setWebhook", data={"webhookURL": webhook_url})
         if response:
             logging.info(f"Webhook URL set to: {webhook_url}")
@@ -207,5 +223,9 @@ class YoPhonePy:
     def get_bot_info(self) -> Optional[Dict[str, Any]]:
         return self._make_request("POST", "getMe")
 
-    def get_channel_user_status(self, channel_id: str, user_id: str) -> Optional[Dict[str, Any]]:
+    def get_channel_user_status(
+            self,
+            channel_id: str,
+            user_id: str
+    ) -> Optional[Dict[str, Any]]:
         return self._make_request("POST", "getChannelMember", data={"channelId": channel_id, "userId": user_id})
