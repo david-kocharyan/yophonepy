@@ -1,3 +1,6 @@
-include LICENSE
+# Include README.md and LICENSE
 include README.md
+include LICENSE
+
+# Include all Python files in the src directory
 recursive-include src *

@@ -1,8 +1,10 @@
-from .bot import YoPhoneBot
+from .bot import YoPhonePy
 from .models import Message, Sender
+from . import murcap
 
 __all__ = [
-    'YoPhoneBot',
+    'YoPhonePy',
     'Message',
-    'Sender'
+    'Sender',
+    'murcap'
 ]

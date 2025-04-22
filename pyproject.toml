@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yophonepy"
+version = "0.1.0"
+description = "A synchronous Python library for interacting with the YoPhone API."
+readme = "README.md"
+requires-python = ">=3.7"
+license = "MIT"
+authors = [
+  { name = "David Kocharyan", email = "davidkocharyan94@gmail.com" }
+]
+dependencies = [
+  "requests",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/david-kocharyan/yophonepy"
+"Bug Tracker" = "https://github.com/david-kocharyan/yophonepy/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
