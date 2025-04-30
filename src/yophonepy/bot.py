@@ -30,6 +30,8 @@ class YoPhonePy:
         self._message_callbacks: List[Callable[[Dict[str, Any]], None]] = []
         self._command_callbacks: Dict[str, Callable[[Message], None]] = {}
 
+        self._polling_active = False
+
     def _log(self, message: str):
         if self.verbose:
             print(message)
@@ -113,10 +115,7 @@ class YoPhonePy:
             except Exception as ex:
                 self._log(f"[YoPhonePy] ❌ Failed to process update: {ex}")
 
-    def start_polling(
-            self,
-            interval: int = 3
-    ):
+    def start_polling(self, interval: int = 3):
         """
         Continuously polls for updates at a specified interval.
 
@@ -124,13 +123,23 @@ class YoPhonePy:
             interval (int): Delay in seconds between polls.
         """
         self._log("[YoPhonePy] 🚀 Polling started. Press Ctrl+C to stop.")
+        self._polling_active = True
         try:
-            while True:
+            while self._polling_active:
                 self.process_updates()
                 time.sleep(interval)
         except KeyboardInterrupt:
             self._log("\n[YoPhonePy] ⛔️ Polling stopped by user (Ctrl+C).")
-            time.sleep(5)
+            self.stop_polling()
+        finally:
+            self._polling_active = False
+
+    def stop_polling(self):
+        """
+        Stops the polling loop gracefully.
+        """
+        self._log("[YoPhonePy] 🛑 Stopping polling loop...")
+        self._polling_active = False
 
     def send_message(
             self,
