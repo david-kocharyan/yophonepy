@@ -1,140 +1,305 @@
-# YoPhonePy - Python Client for YoPhone Bot API
+# 📞 YoPhonePy
 
-YoPhonePy is a Python client library for interacting with the [YoPhone Bot API](https://yoai.yophone.com). It provides easy-to-use methods for polling messages, handling commands, sending messages with media or buttons, and configuring webhooks.
+**YoPhonePy** is a Python client wrapper for interacting with the **YoPhone Bot API**. It provides utility methods for
+polling messages, handling commands, sending media, and managing bot configurations.
 
-## Features
+---
 
-- Poll for new messages and events
-- Register command and message handlers
-- Send messages, media, and buttons
-- Configure webhooks
-- Get bot and webhook information
+## 🚀 Features
 
-## Installation
+- Easy polling and message handling
+- Command-specific routing
+- Send text messages, buttons, and files
+- Support for media URLs and file uploads
+- Configure webhooks and bot commands
 
-Install the library from PyPI:
+---
 
-```bash
-pip install yophonepy
-```
-
-## Getting Started
-
-### 1. Obtain an API Key
-Register on the YoPhone platform to get your API key.
-
-### 2. Set API Key
-You can set your API key as an environment variable:
+## 📦 Installation
 
 ```bash
-export YOPHONE_API_KEY="your_api_key_here"
+  pip install yophonepy
 ```
 
-Or pass it directly to the `YoPhonePy` class:
+---
+
+## ⚙️ Configuration Parameters
+
+When initializing the `YoPhonePy` client, you can provide the following arguments:
 
 ```python
-from yophonepy import YoPhonePy
-
-bot = YoPhonePy(api_key="your_api_key_here")
+bot = YoPhonePy(
+    api_key="your_api_key_here",
+    base_url="https://yoai.yophone.com/api/pub",  # Optional
+    verbose=True  # Optional
+)
 ```
 
-### 3. Write Your Bot
+### 🔑 `api_key` (Required)
+
+Your personal or project-specific API key provided by the YoPhone platform. This authenticates your bot and allows it to
+interact with the API.
+
+### 🌐 `base_url` (Optional)
+
+Defaults to `https://yoai.yophone.com/api/pub`.
+
+### 📣 `verbose` (Optional)
+
+Set to `True` to enable debug logs and helpful messages printed to the console. Useful during development.
+
+---
+
+### 1. Function-Based (with `if __name__ == "__main__"`)
 
 ```python
 from yophonepy import YoPhonePy, Message
-
-bot = YoPhonePy(api_key="your_api_key_here")
-
-@bot.command_handler("start")
-def start_handler(msg: Message):
-    bot.send_message(msg.chat_id, "Hello! How can I assist you today?")
-
-@bot.message_handler
-def echo_handler(raw_data):
-    msg = Message.from_dict(raw_data)
-    bot.send_message(msg.chat_id, f"You said: {msg.text}")
-
-if __name__ == "__main__":
-    bot.start_polling(interval=2)
-```
-
-### Alternative Usage Example
-
-You can also register handlers and initialize the bot programmatically:
-
-```python
-from yophonepy import YoPhonePy
-
-def start_command(message: Message):
-    start_text = f"""
-    Welcome to YoPhonePy Bot, {message.sender.first_name}! \n
-    """
-    bot.send_message(message.chat_id, start_text)
+from typing import Dict, Any
 
 
-def help_command(message: Message):
-    help_text = f"""
-    Welcome to YoPhonePy Bot, {message.sender.first_name}! \n
-    """
-    bot.send_message(message.chat_id, help_text)
+def start_command(msg: Message):
+    bot.send_message(msg.chat_id, "Start Command!")
 
 
-if __name__ == "__main__":
-    bot = YoPhonePy(
-        api_key=your_api_key_here
-    )
+def help_command(msg: Message):
+    bot.send_message(msg.chat_id, "Help Command!")
+
+
+def fallback(msg_data: Dict[str, Any]):
+    msg = Message.from_dict(msg_data)
+    bot.send_message(msg.chat_id, f"Echo: {msg.text}")
+
+
+def main():
+    global bot
+    bot = YoPhonePy(api_key="your_api_key")
 
     bot.command_handler("start")(start_command)
     bot.command_handler("help")(help_command)
+    bot.message_handler(fallback)
 
-    # Start polling for updates
-    bot.start_polling(interval=3)
+    bot.start_polling()
+
+
+if __name__ == "__main__":
+    main()
 ```
 
-## Sending Media and Buttons
+---
 
-### Send Files:
+### 2. Class-Based Example
+
 ```python
-bot.send_files(chat_id="123456", file_paths=["/path/to/file1.png"], caption="Here is your file!")
+from yophonepy import YoPhonePy, Message
+from typing import Dict, Any
+
+
+class CocktailBot:
+    def __init__(self, api_key: str):
+        self.bot = YoPhonePy(api_key=api_key)
+        self.bot.command_handler("start")(self.start)
+        self.bot.command_handler("help")(self.help)
+        self.bot.message_handler(self.fallback)
+
+    def start(self, message: Message):
+        self.bot.send_message(message.chat_id, "Start Command!")
+
+    def help(self, message: Message):
+        self.bot.send_message(message.chat_id, "Help Command!")
+
+    def fallback(self, msg_data: Dict[str, Any]):
+        msg = Message.from_dict(msg_data)
+        self.bot.send_message(msg.chat_id, f"Echo: {msg.text}")
+
+    def run(self):
+        self.bot.start_polling()
+
+
+if __name__ == "__main__":
+    CocktailBot(api_key="your_api_key").run()
 ```
 
-### Send Buttons:
+---
+
+### 3. Decorator-Based Example
+
+```python
+from yophonepy import YoPhonePy, Message
+from typing import Dict, Any
+
+bot = YoPhonePy(api_key="your_api_key")
+
+
+@bot.command_handler("start")
+def start_command(msg: Message):
+    bot.send_message(msg.chat_id, "Start Command!")
+
+
+@bot.command_handler("help")
+def help_command(msg: Message):
+    bot.send_message(msg.chat_id, "Help Command!")
+
+
+@bot.message_handler
+def fallback(msg_data: Dict[str, Any]):
+    msg = Message.from_dict(msg_data)
+    bot.send_message(msg.chat_id, f"Echo: {msg.text}")
+
+
+if __name__ == "__main__":
+    bot.start_polling()
+```
+
+---
+
+## 📌 Additional Examples
+
+### ✅ Send a basic message
+
+```python
+bot.send_message(chat_id="123456", text="Hello from YoPhonePy!")
+```
+
+---
+
+### 🛎 Send a message with buttons
+
 ```python
 bot.send_message_with_buttons(
     chat_id="123456",
     text="Choose an option:",
-    options=[{"text": "Option 1", "value": "opt1"}, {"text": "Option 2", "value": "opt2"}]
+    grid=2,
+    options=[
+        {"text": "Option 1", "callbackData": "opt1"},
+        {"text": "Option 2", "callbackData": "opt2"}
+    ]
 )
 ```
 
-## Webhooks
+---
 
-### Set a Webhook:
+### 📁 Send multiple files
+
 ```python
-bot.set_webhook("https://yourdomain.com/webhook")
+bot.send_files(
+    chat_id="123456",
+    file_paths=["./image.png", "./report.pdf"],
+    caption="Here are your files."
+)
 ```
-
-### Get Webhook Info:
-```python
-bot.get_webhook_info()
-```
-
-### Remove Webhook:
-```python
-bot.remove_webhook()
-```
-
-## Utilities
-
-- `configure_commands(commands: List[Dict[str, str]])` — Set available slash commands
-- `get_bot_info()` — Fetch bot metadata
-- `get_channel_user_status(channel_id, user_id)` — Get user's status in a channel
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
 
 ---
 
-For more information, refer to the official [YoPhone API Documentation](https://bots.yophone.com/docs/intro).
+### 🖼 Send message with external media URLs
+
+```python
+bot.send_message_with_media_url(
+    chat_id="123456",
+    text="Check this out:",
+    media_urls=["https://example.com/photo.jpg"]
+)
+```
+
+---
+
+### 🧩 Configure bot commands list
+
+```python
+bot.configure_commands([
+    {"command": "start", "description": "Start the bot"},
+    {"command": "help", "description": "Display help information"}
+])
+```
+
+---
+
+### 🌐 Webhook management
+
+```python
+bot.set_webhook("https://yourdomain.com/webhook")  # Set webhook URL
+info = bot.get_webhook_info()  # Get webhook info
+bot.remove_webhook()  # Remove webhook
+```
+
+---
+
+### 👤 Get bot info and channel user status
+
+```python
+info = bot.get_bot_info()
+
+status = bot.get_channel_user_status(
+    channel_id="my_channel_id",
+    user_id="user_id_here"
+)
+```
+
+---
+
+### 🛑 Stop polling manually
+
+```python
+bot.stop_polling()
+```
+
+---
+
+## 🧾 Markup Formatting
+
+You can use murcap to easily build rich, readable, formatted messages for the YoPhone platform using Markdown-style
+helpers.
+
+#### Example: /info Command Using murcap
+
+```python
+from yophonepy import YoPhonePy, Message, murcap
+
+bot = YoPhonePy(api_key="your_api_key_here")
+
+
+@bot.command_handler("info")
+def send_info(msg: Message):
+    formatted = murcap.paragraph(
+        murcap.header("Header"),
+        murcap.subheader("Subheader"),
+        murcap.bold("Bold Text Example"),
+        murcap.italic("Italic Text Example"),
+        murcap.underline("Underlined Text Example"),
+        murcap.strikethrough("Strikethrough Text Example"),
+        murcap.code("/start  /help  /info"),
+        murcap.link("🔗 Markup Documentation", "https://yoai.yophone.com/docs/markup"),
+        murcap.combine("Made with ❤️ using ", murcap.code("YoPhonePy"))
+    )
+    bot.send_message(msg.chat_id, formatted)
+```
+
+#### Renders as:
+
+```markdown
+### Header
+## Subheader
+** Bold Text Example **
+*Italic Text Example*
+__Underlined Text Example__
+~Strikethrough Text Example~
+`/start  /help  /info`
+[🔗 Markup Documentation](https://yoai.yophone.com/docs/markup)
+Made with ❤️ using `YoPhonePy`
+```
+
+---
+
+## 📚 Documentation Reference
+
+- **YoPhonePy GitHub**: [https://github.com/david-kocharyan/yophonepy](https://github.com/david-kocharyan/yophonepy)
+- **Official API Reference (YoPhone)**: [https://yoai.yophone.com/docs/intro](https://yoai.yophone.com/docs/intro)
+- **Issues & Support**: Use the [GitHub Issues page](https://github.com/david-kocharyan/yophonepy/issues) to report bugs
+  or request features.
+
+---
+
+## 🧾 License
+
+[MIT License](./LICENSE) — free for personal and commercial use.
+
 
