@@ -14,7 +14,8 @@ authors = [
 ]
 dependencies = [
   "requests",
-  "aiohttp"
+  "aiohttp",
+  "aiofiles"
 ]
 
 [project.urls]
