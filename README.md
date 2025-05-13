@@ -150,6 +150,44 @@ if __name__ == "__main__":
     bot.start_polling()
 ```
 
+### 4. Async-Based Example
+
+If you want full asynchronous support, you can use AsyncYoPhonePy:
+
+```python
+import asyncio
+from yophonepy import AsyncYoPhonePy, Message
+from typing import Dict, Any
+
+bot = AsyncYoPhonePy(api_key="your_api_key")
+
+
+@bot.command_handler("start")
+async def start_command(msg: Message):
+    await bot.send_message(msg.chat_id, "Start Command!")
+
+
+@bot.command_handler("help")
+async def help_command(msg: Message):
+    await bot.send_message(msg.chat_id, "Help Command!")
+
+
+@bot.message_handler
+async def fallback(msg_data: Dict[str, Any]):
+    msg = Message.from_dict(msg_data)
+    await bot.send_message(msg.chat_id, f"Echo: {msg.text}")
+
+
+async def main():
+    await bot.start_polling()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+🧠 Note: All handler functions must be **async def** when using **AsyncYoPhonePy**.
+
 ---
 
 ## 📌 Additional Examples
@@ -277,7 +315,9 @@ def send_info(msg: Message):
 
 ```markdown
 ### Header
+
 ## Subheader
+
 ** Bold Text Example **
 *Italic Text Example*
 __Underlined Text Example__

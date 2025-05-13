@@ -6,6 +6,7 @@ from typing import Callable, Dict, Any, List, Optional
 from yophonepy.utils import determine_mime_type, parse_update
 from yophonepy.models import Message
 
+
 class AsyncYoPhonePy:
     """
     Asynchronous Python client wrapper for interacting with the YoPhone Bot API.
@@ -25,8 +26,8 @@ class AsyncYoPhonePy:
         self.base_url = base_url
         self.verbose = verbose
 
-        self._message_callbacks: List[Callable[[Dict[str, Any]], None]] = []
-        self._command_callbacks: Dict[str, Callable[[Message], None]] = {}
+        self._message_callbacks: List[Callable[[Dict[str, Any]], Any]] = []
+        self._command_callbacks: Dict[str, Callable[[Message], Any]] = {}
 
         self._polling_active = False
 
@@ -86,9 +87,11 @@ class AsyncYoPhonePy:
         """
         Registers a specific handler for a command (without leading slash).
         """
+
         def decorator(func: Callable[[Message], None]):
             self._command_callbacks[f"/{command}"] = func
             return func
+
         return decorator
 
     async def fetch_updates(self) -> List[Dict[str, Any]]:
