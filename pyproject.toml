@@ -9,6 +9,14 @@ description = "A Python library for interacting with the YoPhone API."
 readme = "README.md"
 requires-python = ">=3.7"
 license = "MIT"
+keywords = ["api", "python", "yophone", "async", "http", "client", "library"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries",
+  "Typing :: Typed"
+]
 authors = [
   { name = "David Kocharyan", email = "davidkocharyan94@gmail.com" }
 ]
@@ -21,6 +29,7 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/david-kocharyan/yophonepy"
 "Bug Tracker" = "https://github.com/david-kocharyan/yophonepy/issues"
+"Documentation" = "https://github.com/david-kocharyan/yophonepy#readme"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
